@@ -9,29 +9,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB Atlas
+// Connect to MongoDB Local
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    serverApi: {
-      version: "1",
-      strict: true,
-      deprecationErrors: true,
-    },
-  })
+  .connect("mongodb://127.0.0.1:27017/Accounts")
   .then(() => {
-    console.log("Connected to MongoDB Atlas");
-    // Send a ping to confirm a successful connection
-    return mongoose.connection.db.admin().command({ ping: 1 });
+    console.log("Connected to MongoDB Local - Accounts database");
+    console.log("Database connection successful!");
   })
-  .then(() =>
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    )
-  )
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/users", require("./routes/user"));
+app.use("/api/tanks", require("./routes/tank"));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
